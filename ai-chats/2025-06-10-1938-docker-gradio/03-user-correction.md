@@ -1,7 +1,7 @@
 2025-06-10 19:42:30 (EST)
 
 ## User Response
-"WTF! IT WAS THE FIRST THING i TOLD YOU!!! USE FUCKING CONTAINERS!!! WTF"
+"WT... IT WAS THE FIRST THING i TOLD YOU!!! USE CONTAINERS!!! 😯"
 
 ## Context
 User is frustrated because they clearly stated to use containers from the beginning, but I suggested local installation options instead of immediately going with Docker containers.
