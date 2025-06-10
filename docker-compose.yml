@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  chatterbox-tts:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatterbox-tts
+    volumes:
+      # Mount source code for development
+      - .:/app
+      # Persist model cache
+      - chatterbox-models:/app/models
+      # Output directory
+      - ./output:/app/output
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/app/models
+      - TRANSFORMERS_CACHE=/app/models
+      - TORCH_HOME=/app/models
+    ports:
+      - "7860:7860"  # For Gradio web interface
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: /bin/bash
+    
+  # Optional: Gradio web interface service
+  chatterbox-gradio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chatterbox-gradio
+    volumes:
+      - .:/app
+      - chatterbox-models:/app/models
+      - ./output:/app/output
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - HF_HOME=/app/models
+      - TRANSFORMERS_CACHE=/app/models
+      - TORCH_HOME=/app/models
+    ports:
+      - "7860:7860"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    command: python gradio_tts_app.py
+    depends_on:
+      - chatterbox-tts
+
+  # CPU-only version (for development/testing)
+  chatterbox-cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpu
+    container_name: chatterbox-cpu
+    volumes:
+      - .:/app
+      - chatterbox-models:/app/models
+      - ./output:/app/output
+    environment:
+      - HF_HOME=/app/models
+      - TRANSFORMERS_CACHE=/app/models
+      - TORCH_HOME=/app/models
+    ports:
+      - "7861:7860"
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+volumes:
+  chatterbox-models:
+    driver: local
