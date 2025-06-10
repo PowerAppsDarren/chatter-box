@@ -4,7 +4,7 @@ version = "0.1.2"
 description = "Chatterbox: Open Source TTS and Voice Conversion by Resemble AI"
 readme = "README.md"
 requires-python = ">=3.9"
-license = {file = "LICENSE"}
+license = {text = "MIT"}
 authors = [
     {name = "resemble-ai", email = "engineering@resemble.ai"}
 ]
@@ -18,7 +18,8 @@ dependencies = [
     "diffusers==0.29.0",
     "resemble-perth==1.0.1",
     "conformer==0.3.2",
-    "safetensors==0.5.3"
+    "safetensors==0.5.3",
+    "gradio>=4.0.0"
 ]
 
 [project.urls]

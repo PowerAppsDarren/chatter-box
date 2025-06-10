@@ -12,20 +12,14 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements first for better caching
-COPY pyproject.toml ./
-
-# Install CPU-only PyTorch (override the CUDA version)
-RUN pip install --no-cache-dir torch==2.6.0+cpu torchaudio==2.6.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-
-# Install other dependencies
-RUN pip install --no-cache-dir -e .
-
-# Copy the entire project
+# Copy the entire project first
 COPY . .
 
-# Install the package in development mode
-RUN pip install -e .
+# Install CPU-only PyTorch (override the CUDA version)
+RUN pip install --no-cache-dir torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+
+# Install the package in development mode with all dependencies
+RUN pip install --no-cache-dir -e .
 
 # Create directories for model cache and output
 RUN mkdir -p /app/models /app/output
